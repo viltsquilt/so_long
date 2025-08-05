@@ -6,12 +6,31 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:33 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/05 15:53:43 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/05 19:01:33 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+int	main(int argc, char **argv)
+{
+	if (argc != 2)
+	{
+		ft_printf("Error: invalid map count\n");
+		return (1);
+	}
+	if (check_extension(argv[1]) == 1)
+	{
+		ft_printf("Wrong file type\n");
+		return (1);
+	}
+	if (create_map(argv) == 1 || solid_walls(argv) == 1)
+	{
+		ft_printf("Invalid map\n");
+		return (1);
+	}
+}
+/*
 int	on_destroy(t_data *data)
 {
 	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
@@ -49,6 +68,7 @@ int	main(void)
 	mlx_loop(data.mlx_ptr);
 	return (0);
 }
+*/
 /*
 mlx_init
 Initializes the MLX library. Must be called before using any other functions
