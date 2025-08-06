@@ -6,7 +6,7 @@
 #    By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/05 13:15:45 by vahdekiv          #+#    #+#              #
-#    Updated: 2025/08/05 14:42:06 by vahdekiv         ###   ########.fr        #
+#    Updated: 2025/08/06 14:53:26 by vahdekiv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -I libft/
 INCLUDES = -I/usr/include -Imlx
 MLX_FLAGS = -Lmlx -lmlx -L/usr/lib/X11 -lXext -lX11
-SRCS = main.c maps.c
+SRCS = main.c maps.c path.c so_long_utils.c error_handling.c
 
 OBJS = $(SRCS:.c=.o)
 

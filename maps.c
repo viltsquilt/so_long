@@ -6,18 +6,12 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:19 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/05 19:10:00 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:20:45 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-/* flood fill
-
-map parsing:
-
-valid extension (.ber)
-*/
 int	check_extension(char *string)
 {
 	int	i;
@@ -26,67 +20,112 @@ int	check_extension(char *string)
 	while (string[i])
 		i++;
 	i--;
-	if (string[i] == 'r' && string[i -1] == 'e'
-		&& string[i -2] == 'b' && string[i - 3] == '.')
+	if (string[i] == 'r' && string[i - 1] == 'e'
+		&& string[i - 2] == 'b' && string[i - 3] == '.')
 		return (0);
 	return (1);
 }
 
-// get map size and check if rectangular
-// check for empty lines (start reading from columns)
-
-int	create_map(char **av)
+void	create_map(char	*mapfile)
 {
-	int	fd;
 	t_map	*maps;
+	t_map	*mapcopy;
+
+	mapcopy = NULL;
+	maps = NULL;
+	if (get_map_size(mapfile, maps) == 1)
+		print_error("Invalid map\n", maps);
+	maps->linemap = malloc((maps->width * maps->height + 1) * sizeof(char *));
+	if (!maps->linemap)
+	{
+		free_map(maps);
+		exit (1);
+	}
+	if (check_char(maps) == 1)
+		print_error("Invalid number of elements\n", maps);
+	player_pos(maps);
+	if (is_path_available(maps) == 1)
+		print_error("No valid path\n", maps);
+	free_map(mapcopy);
+	free(maps->linemap);
+}
+
+int	get_map_size(char *mapfile, t_map *maps)
+{
+	int		fd;
+	char	*line;
 
 	maps->height = 0;
-	maps->mapsize = ft_calloc(1, sizeof(t_map));
-	if (!maps->mapsize)
-		return (NULL);
-	fd = open(av[1], O_RDONLY);
-	if (!fd)
+	maps = ft_calloc(1, sizeof(t_map));
+	if (!maps)
 		return (1);
-	maps->width = newstrlen(get_next_line(fd, '\n'));
-	maps->height++;
+	fd = open(mapfile, O_RDONLY);
+	if (fd < 0)
+		return (1);
+	line = get_next_line(fd);
+	maps->width = newstrlen(line, '\n');
+	maps->height = 1;
 	while (1)
 	{
-		if (newstrlen(get_next_line(fd, '\n')) != maps->width
-			|| newstrlen(get_next_line(fd, '\0')) != maps->width)
-			return (1);
-		height++;
-		if (newstrlen(get_next_line(fd, '\0')) == maps->width)
+		free(line);
+		line = get_next_line(fd);
+		if (line == NULL)
 			break ;
+		maps->height++;
+		if (newstrlen(line, '\n') != maps->width)
+		{
+			free(line);
+			close_and_print_error("Map creation failed\n", maps, fd);
+		}
 	}
-	if (maps->width <= maps->height)
+	if (maps->width <= maps->height || check_walls(maps, fd) == 1)
 		return (1);
 	close(fd);
 	return (0);
 }
 
-// solid walls (surrounded by 1s)
-
-int	solid_walls(char **av)
+int	check_walls(t_map *maps, int fd)
 {
-	t_map	*maps;
-
-	
+	maps->x = 0;
+	maps->y = 0;
+	maps->map = NULL;
+	while (maps->y <= maps->height)
+		maps->map[maps->y++] = get_next_line(fd);
+	if (maps->map == NULL)
+		return (1);
+	while (maps->map[maps->y])
+	{
+		while (maps->x <= maps->width)
+		{
+			if ((maps->y == 0 || maps->y == maps->height)
+				&& maps->map[maps->y][maps->x] != '1')
+				return (1);
+			else if ((maps->y != 0 || maps->y != maps->height)
+				&& (maps->x == 0 || maps->x == maps->width)
+				&& (maps->map[maps->y][maps->x] != '1'))
+				return (1);
+			maps->x++;
+		}
+		maps->y++;
+	}
+	return (0);
 }
-// max 5 different characters (1, 0, P, E, C)
-// valid path
-// not empty map
 
-/*
-if (all_collectables_collected && exit_count == 1)
-	return map_valid;
-if (on_wall)
-	return map_invalid;
-if (on_collectable)
-	collectables++;
-if (on_exit)
-	exit++;
-replace_current_position_with_wall;
-if (one_of_the_four_adjacent_directions_is_possible)
-	return map_invalid;
-return map_invalid;
-*/
+int	check_char(t_map *maps)
+{
+	size_t	i;
+
+	i = 0;
+	maps->y = 0;
+	while (maps->map[maps->y])
+	{
+		maps->x = 0;
+		while (maps->x <= maps->width)
+			maps->linemap[i++] = maps->map[maps->y][maps->x++];
+		maps->y++;
+	}
+	maps->linemap[i] = '\0';
+	if (charcount(maps->linemap) == 1)
+		return (1);
+	return (0);
+}

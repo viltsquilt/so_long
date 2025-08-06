@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:33 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/05 19:01:33 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/06 16:57:33 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 int	main(int argc, char **argv)
 {
+	t_map	*maps;
+
+	maps = NULL;
 	if (argc != 2)
 	{
-		ft_printf("Error: invalid map count\n");
+		ft_printf("Error: Invalid map count\n");
 		return (1);
 	}
 	if (check_extension(argv[1]) == 1)
@@ -24,11 +27,9 @@ int	main(int argc, char **argv)
 		ft_printf("Wrong file type\n");
 		return (1);
 	}
-	if (create_map(argv) == 1 || solid_walls(argv) == 1)
-	{
-		ft_printf("Invalid map\n");
-		return (1);
-	}
+	create_map(argv[1]);
+	free_map(maps);
+	return (0);
 }
 /*
 int	on_destroy(t_data *data)
