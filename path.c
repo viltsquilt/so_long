@@ -6,52 +6,52 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:12 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/07 14:55:39 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/07 18:17:00 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	player_pos(t_map *maps)
+void	player_pos(t_map *map)
 {
-	maps->y = 0;
-	maps->playerx = 0;
-	maps->playery = 0;
-	while (maps->y)
+	map->y = 0;
+	map->playerx = 0;
+	map->playery = 0;
+	while (map->y < map->height)
 	{
-		maps->x = 0;
-		while (maps->x <= maps->width)
+		map->x = 0;
+		while (map->x < map->width)
 		{
-			if (maps->map[maps->y][maps->x] == 'P')
+			if (map->mapgrid[map->y][map->x] == 'P')
 			{
-				maps->playerx = maps->x;
-				maps->playery = maps->y;
+				map->playerx = map->x;
+				map->playery = map->y;
 			}
-			maps->x++;
+			map->x++;
 		}
-		maps->y++;
+		map->y++;
 	}
 }
 
-int	is_path_available(t_map *maps)
+int	is_path_available(t_map *map)
 {
 	t_map	*mapcopy;
 
-	mapcopy = copy_map(maps);
-	if (mapcopy->map == NULL)
-		print_error("Map allocation failed\n", maps);
-	flood_fill(mapcopy, maps->playerx, maps->playery);
+	mapcopy = copy_map(map);
+	if (mapcopy->mapgrid == NULL)
+		print_error("Map allocation failed\n", map);
+	flood_fill(mapcopy, map->playerx, map->playery);
 	mapcopy->y = 0;
-	while (mapcopy->y <= maps->height)
+	while (mapcopy->y < map->height)
 	{
 		mapcopy->x = 0;
-		while (mapcopy->x <= maps->width)
+		while (mapcopy->x < map->width)
 		{
-			if (mapcopy->map[mapcopy->y][mapcopy->x] != 'F'
-				|| mapcopy->map[mapcopy->y][mapcopy->x] != '1')
+			if (mapcopy->mapgrid[mapcopy->y][mapcopy->x] == 'E'
+				|| mapcopy->mapgrid[mapcopy->y][mapcopy->x] == 'C')
 			{
 				free_map(mapcopy);
-				free_map(maps);
+				free_map(map);
 				return (1);
 			}
 			mapcopy->x++;
@@ -62,7 +62,7 @@ int	is_path_available(t_map *maps)
 	return (0);
 }
 
-t_map	*copy_map(t_map *maps)
+t_map	*copy_map(t_map *map)
 {
 	t_map	*mapcopy;
 	size_t	i;
@@ -70,32 +70,32 @@ t_map	*copy_map(t_map *maps)
 	i = 0;
 	mapcopy = ft_calloc(1, sizeof(t_map));
 	if (!mapcopy)
-		return (NULL);
-	mapcopy->map = ft_calloc(maps->height + 1, sizeof(char *));
-	if (!mapcopy->map)
+		print_error("Mapcopy allocation failed\n", map);
+	mapcopy->mapgrid = ft_calloc(map->height + 1, sizeof(char *));
+	if (!mapcopy->mapgrid)
 	{
-		free_map(maps);
-		return (NULL);
+		free(mapcopy);
+		print_error("Mapcopy allocation failed\n", map);
 	}
-	while (i <= maps->height)
+	while (i < map->height)
 	{
-		mapcopy->map[i] = ft_strdup(maps->map[i]);
-		if (!mapcopy->map[i])
+		mapcopy->mapgrid[i] = ft_strdup(map->mapgrid[i]);
+		if (!mapcopy->mapgrid[i])
 		{
 			free_map(mapcopy);
-			return (NULL);
+			print_error("Map copying failed\n", map);
 		}
 		i++;
 	}
-	mapcopy->map[i] = NULL;
+	mapcopy->mapgrid[i] = NULL;
 	return (mapcopy);
 }
 
 void	flood_fill(t_map *mapcopy, size_t x, size_t y)
 {
-	if (mapcopy->map[x][y] == '1' || mapcopy->map[x][y] == 'F')
+	if (mapcopy->mapgrid[y][x] == '1' || mapcopy->mapgrid[y][x] == 'F')
 		return ;
-	mapcopy->map[y][x] = 'F';
+	mapcopy->mapgrid[y][x] = 'F';
 	flood_fill(mapcopy, x + 1, y);
 	flood_fill(mapcopy, x - 1, y);
 	flood_fill(mapcopy, x, y + 1);

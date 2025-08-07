@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:19 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/07 14:53:25 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:32:44 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,103 +26,100 @@ int	check_extension(char *string)
 	return (1);
 }
 
-void	create_map(char	*mapfile)
+t_map	*create_map(char *file)
 {
-	t_map	*maps;
-	int		fd;
+	t_map	*map;
 
-	maps = NULL;
-	fd = open(mapfile, O_RDONLY);
-	if (fd < 0)
-		print_error("Failed to open file\n", maps);
-	if (get_map_size(maps, fd) == 1)
-		print_error("Invalid map\n", maps);
-	close(fd);
-	fd = open(mapfile, O_RDONLY);
-	if (fd < 0)
-		print_error("Failed to open map file\n", maps);
-	if (maps->width <= maps->height || check_walls(maps, fd) == 1)
-		print_error("Invalid map\n", maps);
-	close(fd);
-	if (check_char(maps) == 1)
-		print_error("Invalid number of elements\n", maps);
-	player_pos(maps);
-	if (is_path_available(maps) == 1)
-		print_error("No valid path\n", maps);
+	map = ft_calloc(1, sizeof(t_map));
+	if (!map)
+	{
+		ft_printf("Failed to create map\n");
+		exit (1);
+	}
+	map->mapgrid = NULL;
+	map->linemap = NULL;
+	get_map_size(map, file);
+	buildgrid(map, file);
+	if (check_walls(map) == 1)
+		print_error("Invalid map\n", map);
+	if (check_char(map) == 1)
+		print_error("Invalid number of elements\n", map);
+	player_pos(map);
+	if (is_path_available(map) == 1)
+		print_error("No valid path\n", map);
+	return (map);
 }
 
-int	get_map_size(t_map *maps, int fd)
+void	get_map_size(t_map *map, char *file)
 {
-	maps = ft_calloc(1, sizeof(t_map));
-	if (!maps)
-		return (1);
-	maps->line = get_next_line(fd);
-	maps->width = newstrlen(maps->line, '\n');
-	maps->height = 1;
+	int	fd;
+
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		print_error("Invalid file\n", map);
+	if ((map->line = get_next_line(fd)) == NULL)
+		print_error("get_next_line failure\n", map);
+	map->width = newstrlen(map->line, '\n');
+	map->height = 1;
 	while (1)
 	{
-		free(maps->line);
-		maps->line = get_next_line(fd);
-		if (maps->line == NULL)
+		free(map->line);
+		map->line = get_next_line(fd);
+		if (map->line == NULL)
 			break ;
-		maps->height++;
-		if (newstrlen(maps->line, '\n') != maps->width)
+		map->height++;
+		if (newstrlen(map->line, '\n') != map->width)
 		{
-			free(maps->line);
-			close_and_print_error("Map creation failed\n", maps, fd);
+			free(map->line);
+			close_and_print_error("Map not rectangular\n", map, fd);
 		}
 	}
-	return (0);
+	close(fd);
 }
 
-int	check_walls(t_map *maps, int fd)
+int	check_walls(t_map *map)
 {
-	maps->x = 0;
-	maps->y = 0;
-	maps->map = NULL;
-	while (maps->y <= maps->height)
-		maps->map[maps->y++] = get_next_line(fd);
-	if (maps->map == NULL)
-		return (1);
-	while (maps->map[maps->y])
+	map->y = 0;
+	while (map->y < map->height)
 	{
-		while (maps->x <= maps->width)
+		map->x = 0;
+		while (map->x < map->width)
 		{
-			if ((maps->y == 0 || maps->y == maps->height)
-				&& maps->map[maps->y][maps->x] != '1')
+			if ((map->y == 0 || map->y == map->height - 1)
+				&& map->mapgrid[map->y][map->x] != '1')
 				return (1);
-			else if ((maps->y != 0 || maps->y != maps->height)
-				&& (maps->x == 0 || maps->x == maps->width)
-				&& (maps->map[maps->y][maps->x] != '1'))
+			else if ((map->y != 0 || map->y != map->height - 1)
+				&& (map->x == 0 || map->x == map->width - 1)
+				&& (map->mapgrid[map->y][map->x] != '1'))
 				return (1);
-			maps->x++;
+			map->x++;
 		}
-		maps->y++;
+		map->y++;
 	}
 	return (0);
 }
 
-int	check_char(t_map *maps)
+int	check_char(t_map *map)
 {
 	size_t	i;
 
 	i = 0;
-	maps->y = 0;
-	maps->linemap = malloc((maps->width * maps->height + 1) * sizeof(char *));
-	if (!maps->linemap)
+	map->y = 0;
+	map->linemap = malloc((map->width * map->height + 1) * sizeof(char *));
+	if (!map->linemap)
 	{
-		free_map(maps);
+		free_map(map);
 		return (1);
 	}
-	while (maps->map[maps->y])
+	while (map->y < map->height)
 	{
-		maps->x = 0;
-		while (maps->x <= maps->width)
-			maps->linemap[i++] = maps->map[maps->y][maps->x++];
-		maps->y++;
+		map->x = 0;
+		while (map->x < map->width)
+			map->linemap[i++] = map->mapgrid[map->y][map->x++];
+		map->y++;
 	}
-	maps->linemap[i] = '\0';
-	if (charcount(maps->linemap, maps) == 1)
+	map->linemap[i] = '\0';
+	if (charcount(map->linemap, map) == 1)
 		return (1);
 	return (0);
 }
