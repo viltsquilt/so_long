@@ -6,18 +6,18 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:43:10 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/06 17:12:27 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:09:19 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-size_t newstrlen(char *str, char c)
+size_t	newstrlen(char *str, char c)
 {
 	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (str[i] == c)
 			break ;
@@ -27,9 +27,8 @@ size_t newstrlen(char *str, char c)
 	return (i);
 }
 
-int	charcount(char *str)
+int	charcount(char *str, t_map *maps)
 {
-	t_map	*maps;
 	size_t	i;
 
 	i = 0;
@@ -46,7 +45,7 @@ int	charcount(char *str)
 			maps->ccount++;
 		i++;
 	}
-	if (maps.pcount != 1 || maps.ecount != 1 || maps.ccount > 1)
+	if (maps->pcount != 1 || maps->ecount != 1 || maps->ccount > 1)
 		return (1);
 	return (0);
 }

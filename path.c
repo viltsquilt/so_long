@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:12 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/06 17:38:52 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:55:39 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,15 @@ int	is_path_available(t_map *maps)
 {
 	t_map	*mapcopy;
 
-	mapcopy->y = 0;
 	mapcopy = copy_map(maps);
 	if (mapcopy->map == NULL)
 		print_error("Map allocation failed\n", maps);
 	flood_fill(mapcopy, maps->playerx, maps->playery);
-	mapcopy->height = maps->height;
-	mapcopy->width = maps->width;
-	while (mapcopy->y <= mapcopy->height)
+	mapcopy->y = 0;
+	while (mapcopy->y <= maps->height)
 	{
 		mapcopy->x = 0;
-		while (mapcopy->x <= mapcopy->width)
+		while (mapcopy->x <= maps->width)
 		{
 			if (mapcopy->map[mapcopy->y][mapcopy->x] != 'F'
 				|| mapcopy->map[mapcopy->y][mapcopy->x] != '1')
@@ -60,10 +58,11 @@ int	is_path_available(t_map *maps)
 		}
 		mapcopy->y++;
 	}
+	free_map(mapcopy);
 	return (0);
 }
 
-t_map	copy_map(t_map *maps)
+t_map	*copy_map(t_map *maps)
 {
 	t_map	*mapcopy;
 	size_t	i;
@@ -97,8 +96,8 @@ void	flood_fill(t_map *mapcopy, size_t x, size_t y)
 	if (mapcopy->map[x][y] == '1' || mapcopy->map[x][y] == 'F')
 		return ;
 	mapcopy->map[y][x] = 'F';
-	flood_fill(*mapcopy, x + 1, y);
-	flood_fill(*mapcopy, x - 1, y);
-	flood_fill(*mapcopy, x, y + 1);
-	flood_fill(*mapcopy, x, y - 1);
+	flood_fill(mapcopy, x + 1, y);
+	flood_fill(mapcopy, x - 1, y);
+	flood_fill(mapcopy, x, y + 1);
+	flood_fill(mapcopy, x, y - 1);
 }

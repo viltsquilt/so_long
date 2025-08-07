@@ -6,41 +6,55 @@
 #    By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/05 13:15:45 by vahdekiv          #+#    #+#              #
-#    Updated: 2025/08/06 14:53:26 by vahdekiv         ###   ########.fr        #
+#    Updated: 2025/08/07 13:55:08 by vahdekiv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I libft/
-INCLUDES = -I/usr/include -Imlx
-MLX_FLAGS = -Lmlx -lmlx -L/usr/lib/X11 -lXext -lX11
+CFLAGS = -Wall -Wextra -Werror -g
+INCLUDES = -I. -I$(MLX_DIR)/include -I$(LIBFT_DIR)
 SRCS = main.c maps.c path.c so_long_utils.c error_handling.c
 
-OBJS = $(SRCS:.c=.o)
+O_DIR = objdir
 
-LIBFT_DIR = ./libft
+OBJS = $(addprefix $(O_DIR)/,$(SRCS:.c=.o))
+
+LIBFT_DIR = libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-all: $(NAME)
+MLX_DIR = MLX42
+
+MLX_LIB = $(MLX_DIR)/build/libmlx42.a -ldl -lglfw -pthread -lm
+
+all: $(MLX_DIR) $(LIBFT) $(NAME)
 
 $(LIBFT):
 		@make -C $(LIBFT_DIR)
 
-$(NAME): $(OBJS) $(LIBFT)
-		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(MLX_FLAGS)
+$(MLX_DIR):
+		git clone https://github.com/codam-coding-college/MLX42 $(MLX_DIR)
+		cmake $(MLX_DIR) -B $(MLX_DIR)/build && make -C $(MLX_DIR)/build -j4
+
+$(NAME): $(OBJS)
+		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_LIB) -o $(NAME)
+
+$(O_DIR):
+		mkdir -p $@
+
+$(O_DIR)/%.o: %.c so_long.h | $(O_DIR)
+		$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
 
 clean:
-		@rm -f *.o
-		@make clean -C $(LIBFT_DIR)
+		@rm -rf $(O_DIR) $(MLX_DIR)
+		@make fclean -C $(LIBFT_DIR)
 
 fclean: clean
-		@rm -f $(NAME) $(LIBFT)
+		@rm -f $(NAME)
 
 re: fclean all
 
-%.o: %.c
-		$(CC) $(CFLAGS) -c -o $@ $< $(INCLUDES) 
+.SILENT:
 
 .PHONY: all clean fclean re

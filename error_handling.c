@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:20:26 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/06 16:54:41 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/07 13:21:55 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,30 @@ void	print_error(char *msg, t_map *maps)
 	exit (1);
 }
 
+static void	*clean(void *waste)
+{
+	if (waste)
+	{
+		free(waste);
+		waste = NULL;
+	}
+	return (waste);
+}
+
 void	free_map(t_map *maps)
 {
 	int	i;
 
 	i = 0;
-	if (maps)
+	if (maps->map[i])
 	{
-		free(maps[i]);
-		maps[i] = NULL;
+		maps->map[i] = clean(maps->map[i]);
 		i++;
 	}
-	free(maps);
-	maps = NULL;
+	if (maps->map)
+		clean(maps->map);
+	if (maps->linemap)
+		maps->linemap = clean(maps->linemap);
+	if (maps)
+		maps = clean(maps);
 }
