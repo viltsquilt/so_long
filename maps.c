@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:19 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/07 19:32:44 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/11 20:53:04 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ t_map	*create_map(char *file)
 	if (check_char(map) == 1)
 		print_error("Invalid number of elements\n", map);
 	player_pos(map);
-	if (is_path_available(map) == 1)
+	if (is_path_valid(map) == 1)
 		print_error("No valid path\n", map);
+// need check for if map too large
+	// cast to width and height to int32_t
 	return (map);
 }
 

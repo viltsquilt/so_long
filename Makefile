@@ -6,7 +6,7 @@
 #    By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/05 13:15:45 by vahdekiv          #+#    #+#              #
-#    Updated: 2025/08/07 13:55:08 by vahdekiv         ###   ########.fr        #
+#    Updated: 2025/08/11 20:37:21 by vahdekiv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = so_long
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 INCLUDES = -I. -I$(MLX_DIR)/include -I$(LIBFT_DIR)
-SRCS = main.c maps.c path.c so_long_utils.c error_handling.c
+SRCS = main.c maps.c path.c so_long_utils.c cleanup.c error_handling.c \
+launch_game.c events.c
 
 O_DIR = objdir
 

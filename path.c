@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:12 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/07 18:17:00 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/11 17:17:52 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	player_pos(t_map *map)
 	}
 }
 
-int	is_path_available(t_map *map)
+int	is_path_valid(t_map *map)
 {
 	t_map	*mapcopy;
 
