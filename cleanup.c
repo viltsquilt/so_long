@@ -6,21 +6,11 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 13:20:26 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/11 20:39:22 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:21:37 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-static void	*clean(void *waste)
-{
-	if (waste)
-	{
-		free(waste);
-		waste = NULL;
-	}
-	return (waste);
-}
 
 void	free_map(t_map *map)
 {
@@ -31,15 +21,15 @@ void	free_map(t_map *map)
 	{
 		while (map->mapgrid[i])
 		{
-			map->mapgrid[i] = clean(map->mapgrid[i]);
+			free(map->mapgrid[i]);
 			i++;
 		}
-		map->mapgrid = clean(map->mapgrid);
+		free(map->mapgrid);
 	}
 	if (map->linemap)
-		map->linemap = clean(map->linemap);
+		free(map->linemap);
 	if (map)
-		map = clean(map);
+		free(map);
 }
 
 void	close_and_free_game(t_game *game)
@@ -54,12 +44,11 @@ void	close_and_free_game(t_game *game)
 		mlx_delete_image(game->mlx_ptr, game->player);
 	if (game->collectable)
 		mlx_delete_image(game->mlx_ptr, game->collectable);
-	if (game->closed_exit)
-		mlx_delete_image(game->mlx_ptr, game->closed_exit);
 	if (game->exit)
 		mlx_delete_image(game->mlx_ptr, game->exit);
 	if (game->map)
 		free_map(game->map);
 	if (game->mlx_ptr)
 		mlx_terminate(game->mlx_ptr);
+	exit (0);
 }

@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:12:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/11 20:17:00 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:32:57 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 # define SO_LONG_H
 
 # include "MLX42/MLX42.h"
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
 # include <fcntl.h>
 # include "libft/libft.h"
 
@@ -52,32 +49,46 @@ typedef struct s_game
 	t_map		*map;
 }	t_game;
 
-size_t	newstrlen(char *str, char c);
-int		check_extension(char *string);
-int		check_walls(t_map *map);
-int		check_char(t_map *map);
-int		charcount(char *str, t_map *map);
+// Map creation
+int     check_walls(t_map *map);
+int     check_char(t_map *map);
+void    get_map_size(t_map *map, char *file);
+t_map   *draw_map(char *file);
+
+// Map creation utils
+int     charcount(char *str, t_map *map);
+size_t  newstrlen(char *str, char c);
+int     check_extension(char *string);
+int     oversize(t_map *map);
+
+// Path validation
+void    player_pos(t_map *map);
+int     is_path_valid(t_map *map);
+void    buildgrid(t_map *map, char *file);
+void    flood_fill(t_map *mapcopy, size_t x, size_t y);
+t_map	*copy_map(t_map *map);
+
+// Main
 int		main(int argc, char **argv);
-int		is_path_valid(t_map *map);
-void	player_pos(t_map *map);
-void	get_map_size(t_map *map, char *file);
+
+// Cleanup, exit, and error handling
 void	free_map(t_map *map);
 void	close_and_free_game(t_game *game);
 void	close_and_print_error(char *msg, t_map *map, int fd);
 void	print_error(char *msg, t_map *map);
 void	error_exit(char *msg);
 void	game_over(char *msg, t_game *game);
-void	buildgrid(t_map *map, char *file);
-void	flood_fill(t_map *mapcopy, size_t x, size_t y);
+void    exiting(t_game *game, size_t x, size_t y);
+
+// Graphics
 void	launch(t_game *game);
 void	load_images(t_game *game);
 void	make_floor(t_game *game);
 void	spread_game_elements(t_game *game);
+
+// Game events
 void	keypress(mlx_key_data_t keydata, void *param);
 void	execute_move(t_game *game, int y_move, int x_move);
 void	collecting(t_game *game, size_t x, size_t y);
-void	exiting(t_game *game, size_t x, size_t y);
-t_map	*copy_map(t_map *map);
-t_map	*create_map(char *file);
 
 #endif

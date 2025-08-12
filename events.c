@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 17:23:46 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/11 20:49:32 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:02:12 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,21 @@
 
 void	keypress(mlx_key_data_t keydata, void *param)
 {
-	t_game *game;
+	t_game	*game;
 
 	game = (t_game *)param;
 	if (keydata.action == MLX_PRESS)
 	{
-		if (keydata.action == MLX_RELEASE)
-		{
-			if (keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W)
-				execute_move(game, 1, 0);
-			if (keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S)
-				execute_move(game, -1, 0);
-			if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)
-				execute_move(game, 0, -1);
-			if (keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D)
-				execute_move(game, 0, 1);
-			if (keydata.key == MLX_KEY_ESCAPE)
-				game_over("Game exited\n", game);
-		}
+		if (keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W)
+			execute_move(game, -1, 0);
+		if (keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S)
+			execute_move(game, 1, 0);
+		if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)
+			execute_move(game, 0, -1);
+		if (keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D)
+			execute_move(game, 0, 1);
+		if (keydata.key == MLX_KEY_ESCAPE)
+			game_over("Game exited\n", game);
 	}
 }
 
@@ -56,7 +53,7 @@ void	execute_move(t_game *game, int y_move, int x_move)
 	ft_printf("\n");
 	if (mapsquare == 'C')
 		collecting(game, nav_x, nav_y);
-	if (mapsquare == 'E')
+	if (mapsquare == 'E' && game->collected == game->map->ccount)
 		exiting(game, nav_x, nav_y);
 }
 
@@ -67,8 +64,8 @@ void	collecting(t_game *game, size_t x, size_t y)
 	i = 0;
 	while (i < game->map->ccount)
 	{
-		if (game->collectable->instances[i].x == x * MAP_SQUARE
-			&& game->collectable->instances[i].y == y * MAP_SQUARE)
+		if (game->collectable->instances[i].x == (int32_t) x * MAP_SQUARE
+			&& game->collectable->instances[i].y == (int32_t) y * MAP_SQUARE)
 		{
 			game->collectable->instances[i].enabled = false;
 			break ;
@@ -77,22 +74,11 @@ void	collecting(t_game *game, size_t x, size_t y)
 	}
 	game->map->mapgrid[y][x] = '0';
 	game->collected++;
-	if (game->collected == game->map->ccount)
-	{
-		game->closed_exit->instances->enabled = false;
-		mlx_image_to_window(game->mlx_ptr, game->exit,
-		game->closed_exit->instances->x, game->closed_exit->instances->y);
-	}
 }
 
 void	exiting(t_game *game, size_t x, size_t y)
 {
-	if (game->collected == game->map->ccount)
-	{
-		if (game->exit->instances->x == x * MAP_SQUARE
-		&& game->exit->instances->y == y * MAP_SQUARE)
-		{
-			game_over("You won!\n", game);
-		}
-	}
+	if (game->exit->instances->x == (int32_t) x * MAP_SQUARE
+		&& game->exit->instances->y == (int32_t) y * MAP_SQUARE)
+		game_over("You won!\n", game);
 }

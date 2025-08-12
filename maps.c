@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:19 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/11 20:53:04 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:37:23 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_extension(char *string)
 	return (1);
 }
 
-t_map	*create_map(char *file)
+t_map	*draw_map(char *file)
 {
 	t_map	*map;
 
@@ -40,6 +40,8 @@ t_map	*create_map(char *file)
 	map->linemap = NULL;
 	get_map_size(map, file);
 	buildgrid(map, file);
+	if (oversize(map) == 1)
+		print_error("Map too big\n", map);
 	if (check_walls(map) == 1)
 		print_error("Invalid map\n", map);
 	if (check_char(map) == 1)
@@ -47,8 +49,6 @@ t_map	*create_map(char *file)
 	player_pos(map);
 	if (is_path_valid(map) == 1)
 		print_error("No valid path\n", map);
-// need check for if map too large
-	// cast to width and height to int32_t
 	return (map);
 }
 
@@ -59,7 +59,8 @@ void	get_map_size(t_map *map, char *file)
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		print_error("Invalid file\n", map);
-	if ((map->line = get_next_line(fd)) == NULL)
+	map->line = get_next_line(fd);
+	if (!map->line)
 		print_error("get_next_line failure\n", map);
 	map->width = newstrlen(map->line, '\n');
 	map->height = 1;
@@ -109,10 +110,7 @@ int	check_char(t_map *map)
 	map->y = 0;
 	map->linemap = malloc((map->width * map->height + 1) * sizeof(char *));
 	if (!map->linemap)
-	{
-		free_map(map);
 		return (1);
-	}
 	while (map->y < map->height)
 	{
 		map->x = 0;

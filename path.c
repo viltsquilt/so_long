@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:12 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/11 17:17:52 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:39:22 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	is_path_valid(t_map *map)
 				|| mapcopy->mapgrid[mapcopy->y][mapcopy->x] == 'C')
 			{
 				free_map(mapcopy);
-				free_map(map);
 				return (1);
 			}
 			mapcopy->x++;
