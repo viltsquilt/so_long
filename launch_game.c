@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 13:09:32 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 17:00:09 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 20:16:06 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	launch(t_game *game)
 {
 	if (!game || !game->map)
-		game_over("Failed to launch game\n", game);
+		game_over("Error\nFailed to launch game\n", game);
 	game->mlx_ptr = mlx_init(game->map->width * MAP_SQUARE,
-			game->map->height * MAP_SQUARE, "gamename", true);
+			game->map->height * MAP_SQUARE, "Penguin knight", true);
 	if (!game->mlx_ptr)
-		game_over("Failed to launch game\n", game);
+		game_over("Error\nFailed to launch game\n", game);
 	game->collected = 0;
 	game->moves = 0;
 	load_images(game);
@@ -52,7 +52,7 @@ void	load_images(t_game *game)
 	game->player = load_textures(game, "./textures/penguin.png");
 	if (!(game->floor || game->wall || game->collectable || game->exit
 			|| game->player))
-		game_over("Failed to load textures\n", game);
+		game_over("Error\nFailed to load textures\n", game);
 	make_floor(game);
 }
 

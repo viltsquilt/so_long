@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:12 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 18:39:22 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 20:14:55 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	is_path_valid(t_map *map)
 
 	mapcopy = copy_map(map);
 	if (mapcopy->mapgrid == NULL)
-		print_error("Map allocation failed\n", map);
+		print_error("Error\nMap allocation failed\n", map);
 	flood_fill(mapcopy, map->playerx, map->playery);
 	mapcopy->y = 0;
 	while (mapcopy->y < map->height)
@@ -69,12 +69,12 @@ t_map	*copy_map(t_map *map)
 	i = 0;
 	mapcopy = ft_calloc(1, sizeof(t_map));
 	if (!mapcopy)
-		print_error("Mapcopy allocation failed\n", map);
+		print_error("Error\nMapcopy allocation failed\n", map);
 	mapcopy->mapgrid = ft_calloc(map->height + 1, sizeof(char *));
 	if (!mapcopy->mapgrid)
 	{
 		free(mapcopy);
-		print_error("Mapcopy allocation failed\n", map);
+		print_error("Error\nMapcopy allocation failed\n", map);
 	}
 	while (i < map->height)
 	{
@@ -82,7 +82,7 @@ t_map	*copy_map(t_map *map)
 		if (!mapcopy->mapgrid[i])
 		{
 			free_map(mapcopy);
-			print_error("Map copying failed\n", map);
+			print_error("Error\nMap copying failed\n", map);
 		}
 		i++;
 	}

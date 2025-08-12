@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:19 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 18:50:35 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 20:14:06 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,23 @@ t_map	*draw_map(char *file)
 	map = ft_calloc(1, sizeof(t_map));
 	if (!map)
 	{
-		ft_printf("Failed to create map\n");
+		ft_printf("Error\nFailed to create map\n");
 		exit (1);
 	}
 	map->mapgrid = NULL;
 	map->linemap = NULL;
 	get_map_size(map, file);
 	buildgrid(map, file);
-	if (oversize(map) == 1)
-		print_error("Map too big\n", map);
+	if (MONITOR_WIDTH < map->width * MAP_SQUARE
+		|| MONITOR_HEIGHT < map->height * MAP_SQUARE)
+		print_error("Error\nMap too big\n", map);
 	if (check_walls(map) == 1)
-		print_error("Invalid map\n", map);
+		print_error("Error\nInvalid map\n", map);
 	if (check_char(map) == 1)
-		print_error("Invalid number of elements\n", map);
+		print_error("Error\nInvalid number of elements\n", map);
 	player_pos(map);
 	if (is_path_valid(map) == 1)
-		print_error("No valid path\n", map);
+		print_error("Error\nNo valid path\n", map);
 	return (map);
 }
 
@@ -58,10 +59,10 @@ void	get_map_size(t_map *map, char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		print_error("Invalid file\n", map);
+		print_error("Error\nInvalid file\n", map);
 	map->line = get_next_line(fd);
 	if (!map->line)
-		print_error("get_next_line failure\n", map);
+		print_error("Error\nget_next_line failure\n", map);
 	map->width = newstrlen(map->line, '\n');
 	map->height = 1;
 	while (1)
@@ -74,7 +75,7 @@ void	get_map_size(t_map *map, char *file)
 		if (newstrlen(map->line, '\n') != map->width)
 		{
 			free(map->line);
-			close_and_print_error("Map not rectangular\n", map, fd);
+			close_and_print_error("Error\nMap not rectangular\n", map, fd);
 		}
 	}
 	close(fd);

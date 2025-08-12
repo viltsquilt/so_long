@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:12:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 18:52:53 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:25:39 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include "libft/libft.h"
 
 # define MAP_SQUARE 64
+# define MONITOR_HEIGHT 2160
+# define MONITOR_WIDTH 3840
 
 typedef struct s_map
 {

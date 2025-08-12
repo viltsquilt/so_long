@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:33 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 18:18:09 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 20:12:57 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	main(int argc, char **argv)
 	t_game	game;
 
 	if (argc != 2)
-		error_exit("Error: Invalid map count\n");
+		error_exit("Error\nInvalid map count\n");
 	if (check_extension(argv[1]) == 1)
-		error_exit("Wrong file type\n");
+		error_exit("Error\nWrong file type\n");
 	game.map = draw_map(argv[1]);
 	launch(&game);
 	mlx_key_hook(game.mlx_ptr, keypress, &game);

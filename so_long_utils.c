@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:43:10 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 18:40:21 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 20:17:00 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,15 @@ int	charcount(char *str, t_map *map)
 	return (0);
 }
 
+static char	*linefiller(t_map *map, int fd)
+{
+	map->mapgrid[map->y] = get_next_line(fd);
+	if (!map->mapgrid[map->y])
+		print_error("Error\nMemory allocation failed\n", map);
+	map->mapgrid[map->y][newstrlen(map->mapgrid[map->y], '\n')] = '\0';
+	return (map->mapgrid[map->y]);
+}
+
 void	buildgrid(t_map *map, char *file)
 {
 	int	fd;
@@ -57,37 +66,17 @@ void	buildgrid(t_map *map, char *file)
 	map->x = 0;
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		print_error("Failed to open map file\n", map);
+		print_error("Error\nFailed to open map file\n", map);
 	map->mapgrid = ft_calloc(map->height + 1, sizeof(char *));
 	if (!map->mapgrid)
-		print_error("Memory allocation failed\n", map);
+		print_error("Error\nMemory allocation failed\n", map);
 	while (map->y < map->height)
 	{
-		map->line = get_next_line(fd);
-		if (!map->line)
-			print_error("Memory allocation failed\n", map);
-		map->line[newstrlen(map->line, '\n')] = '\0';
-		map->mapgrid[map->y] = ft_strdup(map->line);
-		free(map->line);
+		map->mapgrid[map->y] = linefiller(map, fd);
 		if (!map->mapgrid[map->y])
-			close_and_print_error("Memory allocation failed\n", map, fd);
+			close_and_print_error("Error\nMemory allocation failed\n", map, fd);
 		map->y++;
 	}
 	map->mapgrid[map->y] = NULL;
 	close(fd);
-}
-
-int	oversize(t_map *map)
-{
-	int32_t	monitor_height;
-	int32_t	monitor_width;
-	mlx_t	*test;
-
-	test = mlx_init(1, 1, "test", false);
-	mlx_get_monitor_size(0, &monitor_width, &monitor_height);
-	mlx_terminate(test);
-	if (monitor_width < (int32_t)map->width * MAP_SQUARE
-		|| monitor_height < (int32_t)map->height * MAP_SQUARE)
-		return (1);
-	return (0);
 }
