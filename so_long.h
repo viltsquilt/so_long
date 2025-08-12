@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:12:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 18:32:57 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:52:53 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,22 +50,22 @@ typedef struct s_game
 }	t_game;
 
 // Map creation
-int     check_walls(t_map *map);
-int     check_char(t_map *map);
-void    get_map_size(t_map *map, char *file);
-t_map   *draw_map(char *file);
+int		check_walls(t_map *map);
+int		check_char(t_map *map);
+void	get_map_size(t_map *map, char *file);
+t_map	*draw_map(char *file);
 
 // Map creation utils
-int     charcount(char *str, t_map *map);
-size_t  newstrlen(char *str, char c);
-int     check_extension(char *string);
-int     oversize(t_map *map);
+int		charcount(char *str, t_map *map);
+size_t	newstrlen(char *str, char c);
+int		check_extension(char *string);
+int		oversize(t_map *map);
 
 // Path validation
-void    player_pos(t_map *map);
-int     is_path_valid(t_map *map);
-void    buildgrid(t_map *map, char *file);
-void    flood_fill(t_map *mapcopy, size_t x, size_t y);
+void	player_pos(t_map *map);
+int		is_path_valid(t_map *map);
+void	buildgrid(t_map *map, char *file);
+void	flood_fill(t_map *mapcopy, size_t x, size_t y);
 t_map	*copy_map(t_map *map);
 
 // Main
@@ -78,7 +78,7 @@ void	close_and_print_error(char *msg, t_map *map, int fd);
 void	print_error(char *msg, t_map *map);
 void	error_exit(char *msg);
 void	game_over(char *msg, t_game *game);
-void    exiting(t_game *game, size_t x, size_t y);
+void	exiting(t_game *game, size_t x, size_t y);
 
 // Graphics
 void	launch(t_game *game);
