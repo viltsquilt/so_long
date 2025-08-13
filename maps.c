@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:19 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 20:14:06 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/13 12:12:21 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	get_map_size(t_map *map, char *file)
 {
 	int	fd;
 
+	map->flag = 0;
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		print_error("Error\nInvalid file\n", map);
@@ -73,11 +74,10 @@ void	get_map_size(t_map *map, char *file)
 			break ;
 		map->height++;
 		if (newstrlen(map->line, '\n') != map->width)
-		{
-			free(map->line);
-			close_and_print_error("Error\nMap not rectangular\n", map, fd);
-		}
+			map->flag = 1;
 	}
+	if (map->flag == 1)
+		specific_line_error("Error\nMap not rectangular\n", map, fd);
 	close(fd);
 }
 

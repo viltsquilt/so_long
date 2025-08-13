@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 15:12:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/12 19:25:39 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/13 12:09:56 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_map
 	size_t	width;
 	size_t	y;
 	size_t	x;
+	size_t	flag;
 	size_t	playery;
 	size_t	playerx;
 	size_t	ecount;
@@ -79,6 +80,7 @@ void	close_and_free_game(t_game *game);
 void	close_and_print_error(char *msg, t_map *map, int fd);
 void	print_error(char *msg, t_map *map);
 void	error_exit(char *msg);
+void	specific_line_error(char *msg, t_map *map, int fd);
 void	game_over(char *msg, t_game *game);
 void	exiting(t_game *game, size_t x, size_t y);
 

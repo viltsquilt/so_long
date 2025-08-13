@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 13:00:13 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/11 20:39:44 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/13 12:12:49 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,10 @@ void	error_exit(char *msg)
 {
 	ft_printf("%s", msg);
 	exit (1);
+}
+
+void	specific_line_error(char *msg, t_map *map, int fd)
+{
+	free(map->line);
+	close_and_print_error(msg, map, fd);
 }

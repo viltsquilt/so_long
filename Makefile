@@ -6,7 +6,7 @@
 #    By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/05 13:15:45 by vahdekiv          #+#    #+#              #
-#    Updated: 2025/08/12 20:21:51 by vahdekiv         ###   ########.fr        #
+#    Updated: 2025/08/13 11:18:00 by vahdekiv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ INCLUDES = -I. -I$(MLX_DIR)/include -I$(LIBFT_DIR)
 SRCS = main.c maps.c path.c so_long_utils.c cleanup.c error_handling.c \
 launch_game.c events.c
 
-O_DIR = objdir
+O_DIR = objects
 
 OBJS = $(addprefix $(O_DIR)/,$(SRCS:.c=.o))
 
