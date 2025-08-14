@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 13:18:19 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/08/13 12:12:21 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/08/14 14:35:36 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ t_map	*draw_map(char *file)
 		ft_printf("Error\nFailed to create map\n");
 		exit (1);
 	}
-	map->mapgrid = NULL;
-	map->linemap = NULL;
 	get_map_size(map, file);
 	buildgrid(map, file);
 	if (MONITOR_WIDTH < map->width * MAP_SQUARE
