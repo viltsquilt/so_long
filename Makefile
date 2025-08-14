@@ -6,13 +6,13 @@
 #    By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/05 13:15:45 by vahdekiv          #+#    #+#              #
-#    Updated: 2025/08/13 11:18:00 by vahdekiv         ###   ########.fr        #
+#    Updated: 2025/08/14 13:41:49 by vahdekiv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 INCLUDES = -I. -I$(MLX_DIR)/include -I$(LIBFT_DIR)
 SRCS = main.c maps.c path.c so_long_utils.c cleanup.c error_handling.c \
 launch_game.c events.c
@@ -29,7 +29,7 @@ MLX_DIR = MLX42
 
 MLX_LIB = $(MLX_DIR)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
-all: $(MLX_DIR) $(LIBFT) $(NAME)
+all: $(NAME)
 
 $(LIBFT):
 		@make -C $(LIBFT_DIR)
@@ -38,7 +38,7 @@ $(MLX_DIR):
 		git clone https://github.com/codam-coding-college/MLX42 $(MLX_DIR)
 		cmake $(MLX_DIR) -B $(MLX_DIR)/build && make -C $(MLX_DIR)/build -j4
 
-$(NAME): $(OBJS)
+$(NAME): $(MLX_DIR) $(LIBFT) $(OBJS)
 		@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_LIB) -o $(NAME)
 
 $(O_DIR):
